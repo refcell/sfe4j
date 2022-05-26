@@ -43,7 +43,7 @@
         <#else>
             <#list currentDirectoryFullName?split("/") as x>
                 <#if x!=''>
-                    <#assign currentFullFolder = currentDirectoryFullName?substring(0, currentDirectoryFullName?index_of(x)) + x>
+                    <#assign currentFullFolder = currentDirectoryFullName?substring(0, currentDirectoryFullName?index_of(x)) + x + "/">
                     <#if currentDirectoryFullName?index_of(x) != 0>/</#if>
                     <a href="?dir=${currentFullFolder}"
                        data-toggle="tooltip" data-placement="top" title="View '${currentFullFolder}' Folder">${x}</a>
@@ -72,7 +72,7 @@
                             <td>
                                 <span class="glyphicon glyphicon-arrow-up"></span>
                                 <#if parentDirectory.readable>
-                                    <a href="?dir=${parentDirectory.fullName}"
+                                    <a href="?dir=${parentDirectory.fullName?url('UTF-8')}"
                                        data-toggle="tooltip" data-placement="right" title="View Parent Directory">Parent
                                         Directory</a>
                                 <#else>
@@ -92,9 +92,9 @@
                             <td>
                                 <span class="glyphicon glyphicon-folder-close"></span>
                                 <#if childDirectory.readable>
-                                    <a href="?dir=${childDirectory.fullName}"
+                                    <a href="?dir=${childDirectory.fullName?url('UTF-8')}"
                                        data-toggle="tooltip" data-placement="right"
-                                       title="View '${childDirectory.name}' Folder">${childDirectory.name}</a>
+                                       title="View '${childDirectory.name?url('UTF-8')}' Folder">${childDirectory.name}</a>
                                 <#else>
                                     ${childDirectory.name}
                                 </#if>
@@ -112,9 +112,13 @@
                             <td>
                                 <span class="glyphicon glyphicon-file"></span>
                                 <#if file.readable && (file.name?ends_with(".txt") || file.name?ends_with(".log") || file.name?ends_with(".html") || file.name?ends_with(".htm"))>
-                                    <a href="${ctx}/file-viewer?file=${file.fullName}"
+                                    <a href="${ctx}/file-viewer?file=${file.fullName?url('UTF-8')}"
                                        data-toggle="tooltip" data-placement="right"
                                        title="View '${file.name}'">${file.name}</a>
+                                <#elseif file.readable && (file.name?ends_with(".mp4") || file.name?ends_with(".mkv") || file.name?ends_with(".wmv") || file.name?ends_with(".flv"))>
+                                    <a href="${ctx}/file-player?file=${file.fullName?url('UTF-8')}"
+                                       data-toggle="tooltip" data-placement="right"
+                                       title="View '${file.name}'">${file.name?url('UTF-8')}</a>
                                 <#else>
                                     ${file.name}
                                 </#if>
@@ -124,7 +128,7 @@
                             <td>${file.dateTime}</td>
                             <td>
                                 <#if file.readable>
-                                    <a class="btn btn-xs btn-info" href="${ctx}/file-downloader?file=${file.fullName}"
+                                    <a class="btn btn-xs btn-info" href="${ctx}/file-downloader?file=${file.fullName?url('UTF-8')}"
                                        target="_blank"
                                        title="Download '${file.name}'" data-toggle="tooltip" data-placement="right"
                                        data-original-title="Download '${file.name}'">Download</a>
